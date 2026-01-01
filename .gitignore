@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# HuggingFace / datasets caches (keep local, not in git)
+.cache/
+data/hf_cache/
+data/datasets/
+data/models/
+
+# Runs / artifacts
+runs/*
+!runs/.gitkeep
+
+# Logs
+*.log
+
+# Results
+results/
