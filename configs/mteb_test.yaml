@@ -1,0 +1,51 @@
+run:
+  # Test run ID
+  run_id: "test_run"
+  output_root: "runs"
+  seed: 42
+
+hf:
+  org: "EleutherAI"
+  model_family: "Pythia"
+  # Test with one small model first
+  model_sizes: ["14m"]
+  # Test with just a few checkpoints to verify format works
+  revisions: ["step0", "step1000", "step2000", "main"]
+
+embedding:
+  pooling: "mean"
+  normalize: true
+  max_length: 256
+  batch_size: 32  # Smaller batch for testing
+  device: "cuda"
+  dtype: "auto"
+  # Test with just a few layers
+  layers: "0,1,2"  # Just first 3 layers for 14m model
+
+mteb:
+  # Use a small subset of tasks for testing
+  tasks_preset: null
+  tasks: ["STS12", "STS13"]  # Just 2 simple tasks for testing
+
+execution:
+  fail_fast: false
+  resume: true
+
+# Bandit workflow configuration (minimal for testing)
+bandit:
+  enabled: true
+  algorithm: "linUCB"
+  alpha: 1.0
+  budget: 5  # Very small budget for testing (just 5 evaluations)
+  baseline_checkpoint: "main"
+
+# Metrics configuration
+metrics:
+  # Limit corpus size for faster testing
+  corpus_max_examples_per_task: 100  # Small corpus for testing
+  corpus_cache_path: null
+
+# Rewards configuration
+rewards:
+  aggregation_method: "mean"
+  baseline_method: "mean"
