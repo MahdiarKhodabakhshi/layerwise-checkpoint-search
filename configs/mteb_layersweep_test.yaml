@@ -1,0 +1,43 @@
+run:
+  run_id: null  # Will be auto-generated
+  output_root: "runs"
+  seed: 42
+
+hf:
+  org: "EleutherAI"
+  model_family: "Pythia"
+  model_sizes: ["14m"]  # Smallest model for fast testing
+  revisions: ["step0", "main"]  # Just 2 checkpoints for testing
+
+embedding:
+  pooling: "mean"
+  normalize: true
+  max_length: 256
+  batch_size: 32  # Smaller batch for testing
+  device: "cuda"
+  dtype: "float16"  # Faster for testing
+  layers: "0,1"  # Just first 2 layers for speed (or use "all" for all layers)
+
+mteb:
+  tasks_preset: "layer_by_layer_32"
+  tasks: null
+
+execution:
+  fail_fast: false
+  resume: true
+
+# Minimal bandit configuration for testing
+bandit:
+  enabled: true
+  algorithm: "linUCB"
+  alpha: 1.0
+  budget: 2  # Just 2 evaluations for quick test
+  baseline_checkpoint: "main"
+
+metrics:
+  corpus_max_examples_per_task: 50  # Very small for fast testing
+  corpus_cache_path: null
+
+rewards:
+  aggregation_method: "mean"
+  baseline_method: "mean"
