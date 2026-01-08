@@ -1,0 +1,43 @@
+run:
+  run_id: "exp1_main_final9layers"
+  output_root: "/scratch/mahdiar/pythia-layer-time-runs/pipeline_layer_by_layer"
+  seed: 42
+
+hf:
+  org: "EleutherAI"
+  model_family: "Pythia"
+  model_sizes: ["410m"]
+  # Main checkpoint (final trained checkpoint)
+  revisions: ["main"]
+
+embedding:
+  pooling: "mean"
+  normalize: true
+  max_length: 256
+  batch_size: 64
+  device: "cuda"
+  dtype: "auto"
+  # Final 9 layers of Pythia 410m (has 24 layers: 0-23)
+  # Final 9: 15, 16, 17, 18, 19, 20, 21, 22, 23
+  layers: "15,16,17,18,19,20,21,22,23"
+
+mteb:
+  # All 32 MTEB tasks from Table 1 of the paper
+  tasks_preset: "layer_by_layer_32"
+  tasks: null
+
+execution:
+  fail_fast: false
+  resume: true
+
+# Bandit workflow disabled - brute-force evaluation
+bandit:
+  enabled: false
+
+metrics:
+  corpus_max_examples_per_task: null
+  corpus_cache_path: null
+
+rewards:
+  aggregation_method: "mean"
+  baseline_method: "mean"
