@@ -1,0 +1,44 @@
+run:
+  run_id: null  # Will be auto-generated
+  output_root: "/scratch/mahdiar/pythia-layer-time-runs"  # Use scratch space
+  seed: 42
+
+hf:
+  org: "EleutherAI"
+  model_family: "Pythia"
+  model_sizes: ["410m"]  # Only 410m model
+  # Last 4 checkpoints for 410m model
+  revisions: ["step141000", "step142000", "step143000", "main"]
+
+embedding:
+  pooling: "mean"
+  normalize: true
+  max_length: 256
+  batch_size: 64
+  device: "cuda"
+  dtype: "auto"
+  layers: "6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"  # Layers 6 to 23 (skip first 6 layers)
+
+mteb:
+  tasks_preset: "layer_by_layer_32"  # All 32 MTEB tasks (needed for corpus building)
+  tasks: null
+
+execution:
+  fail_fast: false
+  resume: true
+
+# Bandit workflow configuration - enabled to compute metrics
+bandit:
+  enabled: true  # Enable bandit workflow to compute metrics in Phase 1
+  algorithm: "linUCB"
+  alpha: 1.0
+  budget: 1000  # High budget (we'll stop after Phase 1, but this ensures all metrics are computed)
+  baseline_checkpoint: "main"
+
+metrics:
+  corpus_max_examples_per_task: null  # Use all examples for corpus
+  corpus_cache_path: null
+
+rewards:
+  aggregation_method: "mean"
+  baseline_method: "mean"
