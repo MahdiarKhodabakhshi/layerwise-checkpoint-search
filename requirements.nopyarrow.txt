@@ -1,0 +1,20 @@
+# Core ML / HF stack
+torch>=2.1
+transformers>=4.41
+datasets>=2.19
+accelerate>=0.30
+
+# MTEB benchmark
+mteb>=1.10
+
+# Experiment utilities
+numpy>=1.26
+pandas>=2.2
+scikit-learn>=1.4
+tqdm>=4.66
+pyyaml>=6.0.1
+pydantic>=2.7
+
+# Logging / system info
+rich>=13.7
+psutil>=5.9
