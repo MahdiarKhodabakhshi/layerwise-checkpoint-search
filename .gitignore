@@ -34,6 +34,4 @@ results/
 *.dist-info/
 build/
 dist/
-
-# Virtual environments
 lbl/

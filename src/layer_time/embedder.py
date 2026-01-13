@@ -255,10 +255,22 @@ def _normalize_inputs_to_texts(items: Any) -> List[str]:
 
 
 def _mean_pool(last_hidden: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
-    mask = attention_mask.unsqueeze(-1).to(last_hidden.dtype)  # [B, T, 1]
-    summed = (last_hidden * mask).sum(dim=1)  # [B, H]
-    counts = mask.sum(dim=1).clamp(min=1e-6)  # [B, 1]
-    return summed / counts
+    """
+    Mean pooling over LAST tokens (matching paper's implementation).
+    
+    The paper pools over the last 'length' tokens from the END of the sequence,
+    not all non-padding tokens. For causal models, last tokens have more context.
+    
+    Paper's implementation: hidden_states[i, -length:, :].mean(dim=0)
+    """
+    seq_lengths = attention_mask.sum(dim=-1)  # [B] - actual sequence lengths
+    return torch.stack(
+        [
+            last_hidden[i, -length:, :].mean(dim=0)  # Pool over LAST 'length' tokens
+            for i, length in enumerate(seq_lengths)
+        ],
+        dim=0,
+    )
 
 
 def _infer_num_transformer_layers(cfg: Any) -> int:
@@ -279,7 +291,7 @@ class HFHiddenStateEmbedder(MTEBEncoder):
     revision: str = "main"
     pooling: str = "mean"  # "mean" or "cls"
     normalize: bool = True
-    max_length: int = 256
+    max_length: int = 2048  # Match paper's max_sample_length for causal models
     batch_size: int = 64
     device: str = "auto"  # "auto" | "cuda" | "cpu"
     dtype: str = "auto"  # "auto" | "float16" | "bfloat16" | "float32"
@@ -429,7 +441,7 @@ class HFHiddenStateEmbedder(MTEBEncoder):
                     self._tokenizer.add_special_tokens({"pad_token": "[PAD]"})
                     tokenizer_added_new_token = True
 
-            self._tokenizer.padding_side = "right"
+            self._tokenizer.padding_side = "left"  # Match paper's implementation
 
         if self._model is None:
             torch_dtype = self._get_torch_dtype()
