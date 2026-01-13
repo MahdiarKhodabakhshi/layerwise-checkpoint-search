@@ -37,7 +37,7 @@ class HFSection(BaseModel):
 class EmbeddingSection(BaseModel):
     pooling: str = "mean"
     normalize: bool = True
-    max_length: int = 256
+    max_length: int = 2048  # Match paper's max_sample_length for causal models
     batch_size: int = 64
     device: str = "auto"
     dtype: str = "auto"
