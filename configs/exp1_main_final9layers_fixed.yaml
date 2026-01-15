@@ -1,0 +1,31 @@
+run:
+  run_id: "exp1_main_final9layers_fixed_pooling"
+  output_root: "/scratch/mahdiar/pythia-layer-time-runs/pipeline_layer_by_layer"
+  seed: 42
+
+hf:
+  org: "EleutherAI"
+  model_family: "Pythia"
+  model_sizes: ["410m"]
+  revisions: ["main"]  # Only main checkpoint for Experiment 1
+
+embedding:
+  pooling: "mean"
+  normalize: true
+  max_length: 2048  # Match paper's max_sample_length for causal models
+  batch_size: 64
+  device: "cuda"
+  dtype: "auto"
+  layers: "15,16,17,18,19,20,21,22,23"  # Last 9 layers for Experiment 1
+
+mteb:
+  tasks_preset: "layer_by_layer_32"  # All 32 MTEB tasks
+  tasks: null
+
+execution:
+  fail_fast: false
+  resume: true
+
+# Bandit workflow disabled for brute-force sweep
+bandit:
+  enabled: false
