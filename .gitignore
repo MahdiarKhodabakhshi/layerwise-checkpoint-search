@@ -29,3 +29,11 @@ runs/*
 
 # Results
 results/
+# Python build artifacts
+*.egg-info/
+*.dist-info/
+build/
+dist/
+
+# Virtual environments
+lbl/
