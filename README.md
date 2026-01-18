@@ -1,4 +1,4 @@
-# Pythia Layer/Time Proof-of-Concept (MTEB)
+# Layer by Layer, Step by Step: Adaptive Checkpoint Search for Representation Dynamics
 
 This repository provides a **professional, resumable experiment harness** to reproduce the
 **Layer-by-Layer** MTEB evaluation style: treat each transformer block's hidden state as an embedding,
